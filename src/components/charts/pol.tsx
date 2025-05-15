@@ -136,7 +136,6 @@ const PriceChart: React.FC<PriceChartProps> = ({ data, liquidityEvents, tokenInf
         watermark: {
           color: 'rgba(255, 255, 255, 0.1)',
           visible: true,
-          text: 'Bondle.xyz',
           fontSize: 28,
           horzAlign: 'center',
           vertAlign: 'center',

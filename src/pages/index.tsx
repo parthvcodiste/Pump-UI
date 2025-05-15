@@ -356,7 +356,7 @@ const Home: React.FC = () => {
   return (
     <Layout>
       <SEO
-        title="Create and Trade Memecoins Easily on Bondle."
+        title="Create and Trade Memecoins Easily on Liquid Fun."
         description={`The ultimate platform for launching and trading memecoins on ${process.env.NEXT_PUBLIC_CHAIN_NAME}. Create your own tokens effortlessly and engage in fair, dynamic trading.`}
         image="seo/home.jpg"
       />

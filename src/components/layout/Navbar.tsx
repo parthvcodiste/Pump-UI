@@ -142,7 +142,7 @@ const Navbar: React.FC = () => {
                   <circle cx="5" cy="19" r="2"/>
                   <path d="M5 17A12 12 0 0 1 17 5"/>
                 </svg>
-                <span className="text-[var(--primary)]">Bondle.</span>
+                <span className="text-[var(--primary)]">Liquid Fun</span>
               </Link>
               <div className="hidden md:flex items-center space-x-4">
                 <button 
@@ -161,12 +161,12 @@ const Navbar: React.FC = () => {
             </div>
             
             <div className="hidden md:flex items-center space-x-4">
-              <Link href="https://t.me/bondle_xyz" target="_blank" className="text-gray-300 hover:text-white">
+              {/* <Link href="https://t.me/bondle_xyz" target="_blank" className="text-gray-300 hover:text-white">
                 Telegram
               </Link>
               <Link href="https://x.com/bondlexyz" target="_blank" className="text-gray-300 hover:text-white">
                 Twitter
-              </Link>
+              </Link> */}
               <button 
                 onClick={() => router.push('/create')}
                 className="bg-[var(--primary)] text-black px-4 py-2 rounded-lg font-medium hover:bg-[var(--primary-hover)]"
@@ -208,12 +208,12 @@ const Navbar: React.FC = () => {
               >
                 How it works
               </button>
-              <Link href="https://t.me/bondle_xyz" target="_blank" className="text-gray-300 hover:text-white hover:bg-[var(--card-hover)] block px-2 py-1.5 text-sm rounded-lg transition-colors">
+              {/* <Link href="https://t.me/bondle_xyz" target="_blank" className="text-gray-300 hover:text-white hover:bg-[var(--card-hover)] block px-2 py-1.5 text-sm rounded-lg transition-colors">
                 Telegram
               </Link>
               <Link href="https://x.com/bondlexyz" target="_blank" className="text-gray-300 hover:text-white hover:bg-[var(--card-hover)] block px-2 py-1.5 text-sm rounded-lg transition-colors">
                 Twitter
-              </Link>
+              </Link> */}
               <div className="pt-4 pb-3 border-t border-[var(--card-boarder)]">
                 <div className="flex items-center px-5">
                   <button 

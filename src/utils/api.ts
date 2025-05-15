@@ -101,7 +101,7 @@ export async function getTokenInfoAndTransactions(
   try {
     const baseUrl = typeof window === 'undefined' 
       ? process.env.NEXT_VERCEL_URL
-        ? `https://${process.env.NEXT_VERCEL_URL}`
+        ? `${process.env.NEXT_VERCEL_URL}`
         : 'http://localhost:3000'
       : '';
 

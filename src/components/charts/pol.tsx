@@ -277,13 +277,13 @@ const PriceChart: React.FC<PriceChartProps> = ({ data, liquidityEvents, tokenInf
               <p className="text-lg font-semibold text-white">{formatAmountV3(event.tokenAmount)} {tokenInfo.symbol}</p>
             </div>
             <div className="text-center">
-              <p className="text-sm text-gray-400">BONE</p>
-              <p className="text-lg font-semibold text-white">{formatAmountV3(event.ethAmount)} BONE</p>
+              <p className="text-sm text-gray-400">ETH</p>
+              <p className="text-lg font-semibold text-white">{formatAmountV3(event.ethAmount)} ETH</p>
             </div>
           </div>
           <div className="flex space-x-4">
             <a
-              href={`https://www.shibariumscan.io/tx/${event.txHash}`}
+              href={`https://sepolia.etherscan.io/tx/${event.txHash}`}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
@@ -291,7 +291,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ data, liquidityEvents, tokenInf
               View TXID
             </a>
             <a
-              href={`https://chewyswap.dog/swap/?outputCurrency=${tokenInfo.address}&chain=shibarium`}
+              href={`https://chewyswap.dog/swap/?outputCurrency=${tokenInfo.address}&chain=sepolia`}
               target="_blank"
               rel="noopener noreferrer"
               className="bg-red-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded"

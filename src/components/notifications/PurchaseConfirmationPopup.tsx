@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { X as XIcon } from 'lucide-react';
 import { parseUnits } from 'viem';
+import { getTokenSymbol } from '../../utils/blockchainUtils';
 
 interface PurchaseConfirmationPopupProps {
   onConfirm: (amount: bigint) => void;
@@ -26,10 +27,10 @@ const PurchaseConfirmationPopup: React.FC<PurchaseConfirmationPopupProps> = ({ o
         >
           <XIcon size={18} />
         </button>
-        <h2 className="text-sm font-bold text-white mb-2">How many {tokenSymbol} do you want to buy? - amount in Bone</h2>
+        <h2 className="text-sm font-bold text-white mb-2">How many {tokenSymbol} do you want to buy? - amount in {getTokenSymbol()}</h2>
         <p className="text-[10px] sm:text-xs text-gray-400 mb-3 italic leading-tight">
           Tip: It&apos;s optional, but buying a small amount helps protect your coin from snipers. 
-          When creating, creators can buy up to 5% of the trading supply; any excess BONE is refunded.
+          When creating, creators can buy up to 5% of the trading supply; any excess {getTokenSymbol()} is refunded.
         </p>
         <input
           type="number"
@@ -53,7 +54,7 @@ const PurchaseConfirmationPopup: React.FC<PurchaseConfirmationPopupProps> = ({ o
           </button>
         </div>
         <p className="text-[8px] sm:text-xs text-gray-400 text-center">
-          Cost to deploy: ~0 BONE
+          Cost to deploy: ~0 {getTokenSymbol()}
         </p>
       </div>
     </div>

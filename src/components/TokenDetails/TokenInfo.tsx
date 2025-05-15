@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { ExternalLinkIcon, Copy } from 'lucide-react';
 import { TokenWithTransactions, PriceCache } from '@/interface/types';
-import { formatTimestamp, shortenAddress, formatAddressV2, formatAmount } from '@/utils/blockchainUtils';
+import { formatTimestamp, shortenAddress, formatAddressV2, formatAmount, getTokenSymbol } from '@/utils/blockchainUtils';
 import { Globe, Twitter, Send as Telegram, Youtube, MessageCircle as Discord } from 'lucide-react';
 import { useTokenLiquidity, useCurrentTokenPrice, useMarketCap, formatAmountV2 } from '@/utils/blockchainUtils';
 import { formatUnits } from 'viem';
 import { toast } from 'react-toastify';
 import { getCurrentPrice } from '@/utils/api';
-import Image from 'next/image';
 
 interface TokenInfoProps {
   tokenInfo: TokenWithTransactions;
@@ -102,7 +101,7 @@ const TokenInfo: React.FC<TokenInfoProps> = ({ tokenInfo, showHeader = false, re
         <InfoItem 
           label="Contract" 
           value={tokenInfo?.address ? formatAddressV2(tokenInfo.address) : 'Loading...'}
-          link={`https://shibariumscan.io/address/${tokenInfo?.address}`}
+          link={`${process.env.NEXT_PUBLIC_EXPLORER_URL}/address/${tokenInfo?.address}`}
           isExternal={true}
         />
         <InfoItem 
@@ -121,7 +120,7 @@ const TokenInfo: React.FC<TokenInfoProps> = ({ tokenInfo, showHeader = false, re
         />
         <InfoItem 
           label="Current Price" 
-          value={currentPrice ? `${formatAmount(currentPrice.toString())} BONE` : 'Loading...'}
+          value={currentPrice ? `${formatAmount(currentPrice.toString())} ${getTokenSymbol()}` : 'Loading...'}
         />
       </div>
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import { useWebSocket } from '@/components/providers/WebSocketProvider';
-import { formatAmountV2 } from '@/utils/blockchainUtils';
+import { formatAmountV2, getTokenSymbol } from '@/utils/blockchainUtils';
 
 interface Notification {
   message: string;
@@ -25,14 +25,14 @@ const LiveNotifications: React.FC = () => {
       case 'buy':
         return {
           message: `${addressEnd} Bought ${formatAmountV2(data.data.tokenAmount)} ${data.data.symbol}`,
-          secondPart: `with ${formatAmountV2(data.data.ethAmount)} BONE`,
+          secondPart: `with ${formatAmountV2(data.data.ethAmount)} ${getTokenSymbol()}`,
           type: 'buy',
           logo: data.data.logo
         };
       case 'sell':
         return {
           message: `${addressEnd} Sold ${formatAmountV2(data.data.tokenAmount)} ${data.data.symbol}`,
-          secondPart: `for ${formatAmountV2(data.data.ethAmount)} BONE`,
+          secondPart: `for ${formatAmountV2(data.data.ethAmount)} ${getTokenSymbol()}`,
           type: 'sell',
           logo: data.data.logo
         };

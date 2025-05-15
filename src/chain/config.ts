@@ -1,5 +1,5 @@
 import { Chain } from 'viem'
-import { flare, shibarium } from 'wagmi/chains'
+import { sepolia } from 'wagmi/chains'
 
 interface ChainConfig {
   apiBaseUrl: string
@@ -13,8 +13,8 @@ interface ChainConfigs {
   [chainId: number]: ChainConfig
 }
 
-// Shibarium Chain Configuration
-const shibariumConfig: ChainConfig = {
+// Sepolia Chain Configuration
+const sepoliaConfig: ChainConfig = {
   apiBaseUrl: process.env.NEXT_PUBLIC_API_BASE_URL!,
   wsBaseUrl: process.env.NEXT_PUBLIC_WS_BASE_URL!,
   blockscoutUrl: process.env.NEXT_PUBLIC_BLOCKSCOUT_URL!,
@@ -26,30 +26,17 @@ const shibariumConfig: ChainConfig = {
   ].filter(Boolean)
 }
 
-// Flare Chain Configuration
-// const flareConfig: ChainConfig = {
-//   apiBaseUrl: process.env.FLARE_NEXT_PUBLIC_API_BASE_URL!,
-//   wsBaseUrl: process.env.FLARE_NEXT_PUBLIC_WS_BASE_URL!,
-//   blockscoutUrl: process.env.FLARE_NEXT_PUBLIC_BLOCKSCOUT_URL!,
-//   dexTarget: Number(process.env.FLARE_NEXT_PUBLIC_DEX_TARGET),
-//   contractAddresses: [
-//     process.env.FLARE_NEXT_PUBLIC_BONDING_CURVE_MANAGER_ADDRESS!
-//   ].filter(Boolean)
-// }
-
 // Chain configurations mapped by chainId
 export const chainConfigs: ChainConfigs = {
-  [shibarium.id]: shibariumConfig,
-  // [flare.id]: flareConfig,
+  [sepolia.id]: sepoliaConfig,
 }
 
 // Supported chains for the application
-// export const supportedChains: Chain[] = [shibarium, flare]
-export const supportedChains: Chain[] = [shibarium]
+export const supportedChains: Chain[] = [sepolia];
 
 // Helper function to get chain configuration by chainId
 export const getChainConfig = (chainId: number): ChainConfig | undefined => {
-  return chainConfigs[chainId]
+  return chainConfigs[chainId];
 }
 
 // Helper function to get current active contract address for a chain //wrong ill fix later on

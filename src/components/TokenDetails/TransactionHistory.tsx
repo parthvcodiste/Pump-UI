@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ChevronLeftIcon, ChevronRightIcon, ExternalLinkIcon, ChevronDownIcon } from 'lucide-react';
-import { formatTimestamp, formatAmountV3, shortenAddress } from '@/utils/blockchainUtils';
+import { formatTimestamp, formatAmountV3, shortenAddress, getTokenSymbol } from '@/utils/blockchainUtils';
 import { Transaction } from '@/interface/types';
 
 interface TransactionHistoryProps {
@@ -49,7 +49,7 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({
         <tr className="bg-[var(--card2)]">
           <th className="px-4 py-2 text-sm text-gray-400">Maker</th>
           <th className="px-4 py-2 text-sm text-gray-400">Type</th>
-          <th className="px-4 py-2 text-sm text-gray-400">BONE</th>
+          <th className="px-4 py-2 text-sm text-gray-400">{getTokenSymbol()}</th>
           <th className="px-4 py-2 text-sm text-gray-400">{tokenSymbol}</th>
           <th className="px-4 py-2 text-sm text-gray-400">Date</th>
           <th className="px-4 py-2 text-sm text-gray-400">Tx</th>
@@ -60,7 +60,7 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({
           <tr key={tx.id} className="border-b border-[var(--card-hover)]">
             <td className="px-4 py-2">
               <a 
-                href={`https://shibariumscan.io/address/${tx.senderAddress}`}
+                href={`${process.env.NEXT_PUBLIC_EXPLORER_URL}/address/${tx.senderAddress}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-[var(--primary)] text-sm transition-colors"
@@ -74,7 +74,7 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({
             <td className="px-4 py-2 text-sm text-gray-400">{formatTimestamp(tx.timestamp)}</td>
             <td className="px-4 py-2">
               <a
-                href={`https://shibariumscan.io/tx/${tx.txHash}`}
+                href={`${process.env.NEXT_PUBLIC_EXPLORER_URL}/tx/${tx.txHash}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-[var(--primary)] text-sm transition-colors"
@@ -109,7 +109,7 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({
                   />
                 </div>
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-400">{formatAmountV3(tx.ethAmount)} BONE</span>
+                  <span className="text-gray-400">{formatAmountV3(tx.ethAmount)} {getTokenSymbol()}</span>
                   <span className="text-gray-400">{formatAmountV3(tx.tokenAmount)} {tokenSymbol}</span>
                 </div>
               </div>
@@ -120,7 +120,7 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({
                 <div className="flex justify-between text-xs">
                   <span className="text-gray-400">Maker:</span>
                   <a 
-                    href={`https://shibariumscan.io/address/${tx.senderAddress}`}
+                    href={`${process.env.NEXT_PUBLIC_EXPLORER_URL}/address/${tx.senderAddress}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-gray-400 hover:text-[var(--primary)]"
@@ -135,7 +135,7 @@ const TransactionHistory: React.FC<TransactionHistoryProps> = ({
                 <div className="flex justify-between text-xs">
                   <span className="text-gray-400">Transaction:</span>
                   <a
-                    href={`https://shibariumscan.io/tx/${tx.txHash}`}
+                    href={`${process.env.NEXT_PUBLIC_EXPLORER_URL}/tx/${tx.txHash}`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-gray-400 hover:text-[var(--primary)] flex items-center gap-1"

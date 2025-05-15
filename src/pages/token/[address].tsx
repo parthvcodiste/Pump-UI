@@ -23,6 +23,7 @@ import {
   useApproveTokens,
   formatAmountV2,
   getBondingCurveAddress,
+  getTokenSymbol,
 } from '@/utils/blockchainUtils';
 import { getTokenInfoAndTransactions, getTokenUSDPriceHistory, getTokenHolders, getTokenLiquidityEvents } from '@/utils/api';
 import { parseUnits, formatUnits } from 'viem';
@@ -61,7 +62,7 @@ interface TokenDetailProps {
   const [transactions, setTransactions] = useState<any[]>([]);
   const [transactionPage, setTransactionPage] = useState(1);
   const [totalTransactionPages, setTotalTransactionPages] = useState(1);
-  const [fromToken, setFromToken] = useState({ symbol: 'BONE', amount: '' });
+  const [fromToken, setFromToken] = useState({ symbol: getTokenSymbol(), amount: '' });
   const [toToken, setToToken] = useState({ symbol: '', amount: '' });
   const [isSwapped, setIsSwapped] = useState(false);
   const [isCalculating, setIsCalculating] = useState(false);
@@ -253,11 +254,11 @@ interface TokenDetailProps {
   const handleSwap = useCallback(() => {
     setIsSwapped((prev) => !prev);
     setFromToken((prev) => ({
-      symbol: prev.symbol === 'BONE' ? tokenInfo.symbol : 'BONE',
+      symbol: prev.symbol === getTokenSymbol() ? tokenInfo.symbol : getTokenSymbol(),
       amount: '',
     }));
     setToToken((prev) => ({
-      symbol: prev.symbol === 'BONE' ? tokenInfo.symbol : 'BONE',
+      symbol: prev.symbol === getTokenSymbol() ? tokenInfo.symbol : getTokenSymbol(),
       amount: '',
     }));
   }, [tokenInfo]);

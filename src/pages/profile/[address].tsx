@@ -4,7 +4,7 @@ import { useAccount } from 'wagmi';
 import Layout from '@/components/layout/Layout';
 import { getTransactionsByAddress, getAllTokenAddresses, getTokensByCreator } from '@/utils/api';
 import { Transaction, PaginatedResponse, Token } from '@/interface/types';
-import { formatTimestamp, formatAddressV2, formatAmountV3, useERC20Balance } from '@/utils/blockchainUtils';
+import { formatTimestamp, formatAddressV2, formatAmountV3, useERC20Balance, getTokenSymbol } from '@/utils/blockchainUtils';
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 import SEO from '@/components/seo/SEO';
 import LoadingBar from '@/components/ui/LoadingBar';
@@ -30,7 +30,7 @@ const TokenBalanceItem: React.FC<TokenBalanceItemProps> = ({ tokenAddress, symbo
 
   const handleAddressClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    window.open(`https://shibariumscan.io/address/${tokenAddress}`, '_blank');
+    window.open(`${process.env.NEXT_PUBLIC_EXPLORER_URL}/address/${tokenAddress}`, '_blank');
   };
 
   return (
@@ -209,7 +209,7 @@ const ProfilePage: React.FC = () => {
     setCurrentPage(newPage);
   };
 
-  const getTokenSymbol = (tokenAddress: string) => {
+  const getCustomTokenSymbol = (tokenAddress: string) => {
     const token = tokenAddresses.find(t => t.address.toLowerCase() === tokenAddress.toLowerCase());
     return token ? token.symbol : 'Unknown';
   };
@@ -347,7 +347,7 @@ const ProfilePage: React.FC = () => {
                     <th className="px-4 py-3 text-left text-[10px] sm:text-xs font-medium text-gray-400 uppercase tracking-wider">Type</th>
                     <th className="px-4 py-3 text-left text-[10px] sm:text-xs font-medium text-gray-400 uppercase tracking-wider">Token</th>
                     <th className="px-4 py-3 text-left text-[10px] sm:text-xs font-medium text-gray-400 uppercase tracking-wider">Amount</th>
-                    <th className="px-4 py-3 text-left text-[10px] sm:text-xs font-medium text-gray-400 uppercase tracking-wider">Bone</th>
+                    <th className="px-4 py-3 text-left text-[10px] sm:text-xs font-medium text-gray-400 uppercase tracking-wider">{getTokenSymbol()}</th>
                     <th className="px-4 py-3 text-left text-[10px] sm:text-xs font-medium text-gray-400 uppercase tracking-wider">Date</th>
                   </tr>
                 </thead>
@@ -355,9 +355,9 @@ const ProfilePage: React.FC = () => {
                   {transactions.map((tx) => (
                     <tr key={tx.id} className="hover:bg-[var(--card-hover)] transition-colors duration-150">
                       <td className="px-4 py-3 whitespace-nowrap text-[10px] sm:text-xs text-gray-300">{tx.type}</td>
-                      <td className="px-4 py-3 whitespace-nowrap text-[10px] sm:text-xs text-gray-300">{getTokenSymbol(tx.recipientAddress)}</td>
+                      <td className="px-4 py-3 whitespace-nowrap text-[10px] sm:text-xs text-gray-300">{getCustomTokenSymbol(tx.recipientAddress)}</td>
                       <td className="px-4 py-3 whitespace-nowrap text-[10px] sm:text-xs text-gray-300">{formatAmountV3(tx.tokenAmount)}</td>
-                      <td className="px-4 py-3 whitespace-nowrap text-[10px] sm:text-xs text-gray-300">{formatAmountV3(tx.ethAmount)} BONE</td>
+                      <td className="px-4 py-3 whitespace-nowrap text-[10px] sm:text-xs text-gray-300">{formatAmountV3(tx.ethAmount)} {getTokenSymbol()}</td>
                       <td className="px-4 py-3 whitespace-nowrap text-[10px] sm:text-xs text-gray-300">{formatTimestamp(tx.timestamp)}</td>
                     </tr>
                   ))}

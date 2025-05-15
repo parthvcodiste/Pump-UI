@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { createChart, CrosshairMode, IChartApi, Time } from 'lightweight-charts';
 import Image from 'next/image';
-import { formatAmountV3 } from '@/utils/blockchainUtils';
+import { formatAmountV3, getTokenSymbol } from '@/utils/blockchainUtils';
 import Spinner from '@/components/ui/Spinner';
 
 // TODO: add different chart types (bars, line, area, etc)
@@ -66,7 +66,6 @@ const PriceChart: React.FC<PriceChartProps> = ({ data, liquidityEvents, tokenInf
         watermark: {
           color: 'rgba(255, 255, 255, 0.1)',
           visible: true,
-          text: 'Bondle.xyz',
           fontSize: 28,
           horzAlign: 'center',
           vertAlign: 'center',
@@ -196,13 +195,13 @@ const PriceChart: React.FC<PriceChartProps> = ({ data, liquidityEvents, tokenInf
             <p className="text-lg font-semibold text-white">{formatAmountV3(event.tokenAmount)} {tokenInfo.symbol}</p>
           </div>
           <div className="text-center">
-            <p className="text-sm text-gray-400">BONE</p>
-            <p className="text-lg font-semibold text-white">{formatAmountV3(event.ethAmount)} BONE</p>
+            <p className="text-sm text-gray-400">{getTokenSymbol()}</p>
+            <p className="text-lg font-semibold text-white">{formatAmountV3(event.ethAmount)} {getTokenSymbol()}</p>
           </div>
         </div>
         <div className="flex space-x-4">
           <a
-            href={`https://www.shibariumscan.io/tx/${event.txHash}`}
+            href={`${process.env.NEXT_PUBLIC_EXPLORER_URL}/tx/${event.txHash}`}
             target="_blank"
             rel="noopener noreferrer"
             className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
@@ -210,7 +209,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ data, liquidityEvents, tokenInf
             View TXID
           </a>
           <a
-            href={`https://chewyswap.dog/swap/?outputCurrency=${tokenInfo.address}&chain=shibarium`}
+            href={`https://chewyswap.dog/swap/?outputCurrency=${tokenInfo.address}&chain=sepolia`}
             target="_blank"
             rel="noopener noreferrer"
             className="bg-red-500 hover:bg-pink-600 text-white font-bold py-2 px-4 rounded"

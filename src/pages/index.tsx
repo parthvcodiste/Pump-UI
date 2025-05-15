@@ -10,7 +10,6 @@ import SEO from '@/components/seo/SEO';
 import { useWebSocket } from '@/components/providers/WebSocketProvider';
 import { Switch } from '@/components/ui/switch';
 import Spinner from '@/components/ui/Spinner';
-import { useRouter } from 'next/router';
 
 const TOKENS_PER_PAGE = 100;
 
@@ -47,7 +46,6 @@ const Home: React.FC = () => {
   const [currentTextIndex, setCurrentTextIndex] = useState(0);
   const [displayText, setDisplayText] = useState({ heading: "", subheading: "" });
   const [isTyping, setIsTyping] = useState(true);
-  const router = useRouter();
 
   useEffect(() => {
     console.log('Effect triggered. Current sort:', sort, 'Current page:', currentPage, 'Search:', searchQuery);
@@ -204,7 +202,6 @@ const Home: React.FC = () => {
   }, [tokens, searchQuery]);
 
   const handleSearch = (query: string) => {
-    console.log('Search query updated:', query);
     if (query !== searchQuery) {
       setSearchQuery(query);
       if (query.trim()) {
@@ -284,10 +281,6 @@ const Home: React.FC = () => {
     });
   };
 
-  const handleLaunchToken = () => {
-    router.push('/create');
-  };
-
   // Typewriter effect
   useEffect(() => {
     let timeoutId: NodeJS.Timeout;
@@ -364,7 +357,7 @@ const Home: React.FC = () => {
     <Layout>
       <SEO
         title="Create and Trade Memecoins Easily on Bondle."
-        description="The ultimate platform for launching and trading memecoins on Shibarium. Create your own tokens effortlessly and engage in fair, dynamic trading."
+        description={`The ultimate platform for launching and trading memecoins on ${process.env.NEXT_PUBLIC_CHAIN_NAME}. Create your own tokens effortlessly and engage in fair, dynamic trading.`}
         image="seo/home.jpg"
       />
       <HowItWorksPopup isVisible={showHowItWorks} onClose={() => setShowHowItWorks(false)} />

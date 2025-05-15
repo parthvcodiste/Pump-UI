@@ -7,6 +7,7 @@ import {
   BarChart2, 
   Zap 
 } from 'lucide-react';
+import { getTokenSymbol } from '../../utils/blockchainUtils';
 
 interface HowItWorksPopupProps {
   isVisible: boolean;
@@ -19,7 +20,7 @@ const HowItWorksPopup: React.FC<HowItWorksPopupProps> = ({ isVisible, onClose })
     { icon: TrendingUp, text: "Get discovered by early traders" },
     { icon: DollarSign, text: "Trade with zero slippage" },
     { icon: BarChart2, text: "Track your portfolio" },
-    { icon: Zap, text: "List on DEX at 2500 BONE" }
+    { icon: Zap, text: `List on DEX at 2500 ${getTokenSymbol()}` }
   ];
 
   if (!isVisible) return null;

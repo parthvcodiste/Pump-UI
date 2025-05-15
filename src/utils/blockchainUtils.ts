@@ -499,5 +499,9 @@ export function shortenAddress(address: string): string {
 }
 
 export function getExplorerUrl(txHash: string): string {
-  return `https://shibariumscan.io/tx/${txHash}`;
+  return `${process.env.NEXT_PUBLIC_TOKEN_SYMBOL}/tx/${txHash}`;
+}
+
+export function getTokenSymbol(): string {
+  return process.env.NEXT_PUBLIC_TOKEN_SYMBOL as string;
 }

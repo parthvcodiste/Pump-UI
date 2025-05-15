@@ -8,6 +8,7 @@ import { formatTimestamp, formatAddressV2, formatAmountV3, useERC20Balance } fro
 import { ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/20/solid';
 import SEO from '@/components/seo/SEO';
 import Spinner from '@/components/ui/Spinner';
+import { getTokenSymbol } from "@/utils/blockchainUtils";
 
 interface TransactionResponse extends Omit<PaginatedResponse<Transaction>, 'data'> {
   transactions: Transaction[];
@@ -27,7 +28,7 @@ const TokenBalanceItem: React.FC<{
 
   const handleAddressClick = (e: React.MouseEvent) => {
     e.stopPropagation();
-    window.open(`https://shibariumscan.io/address/${tokenAddress}`, '_blank');
+    window.open(`${process.env.NEXT_PUBLIC_EXPLORER_URL}/address/${tokenAddress}`, '_blank');
   };
 
   return (
@@ -172,7 +173,7 @@ const UserDashboard: React.FC = () => {
     setCurrentPage(newPage);
   };
 
-  const getTokenSymbol = (tokenAddress: string) => {
+  const getCustomTokenSymbol = (tokenAddress: string) => {
     const token = tokenAddresses.find(t => t.address.toLowerCase() === tokenAddress.toLowerCase());
     return token ? token.symbol : 'Unknown';
   };
@@ -287,7 +288,7 @@ const UserDashboard: React.FC = () => {
                     <th className="px-4 py-3 text-left text-[10px] sm:text-xs font-medium text-gray-300 uppercase tracking-wider">Type</th>
                     <th className="px-4 py-3 text-left text-[10px] sm:text-xs font-medium text-gray-300 uppercase tracking-wider">Token</th>
                     <th className="px-4 py-3 text-left text-[10px] sm:text-xs font-medium text-gray-300 uppercase tracking-wider">Amount</th>
-                    <th className="px-4 py-3 text-left text-[10px] sm:text-xs font-medium text-gray-300 uppercase tracking-wider">Bone</th>
+                    <th className="px-4 py-3 text-left text-[10px] sm:text-xs font-medium text-gray-300 uppercase tracking-wider">{getTokenSymbol()}</th>
                     <th className="px-4 py-3 text-left text-[10px] sm:text-xs font-medium text-gray-300 uppercase tracking-wider">Date</th>
                   </tr>
                 </thead>
@@ -295,9 +296,9 @@ const UserDashboard: React.FC = () => {
                   {transactions.map((tx) => (
                     <tr key={tx.id} className="hover:bg-gray-700 transition-colors duration-150">
                       <td className="px-4 py-3 whitespace-nowrap text-[10px] sm:text-xs text-gray-300">{tx.type}</td>
-                      <td className="px-4 py-3 whitespace-nowrap text-[10px] sm:text-xs text-gray-300">{getTokenSymbol(tx.recipientAddress)}</td>
+                      <td className="px-4 py-3 whitespace-nowrap text-[10px] sm:text-xs text-gray-300">{getCustomTokenSymbol(tx.recipientAddress)}</td>
                       <td className="px-4 py-3 whitespace-nowrap text-[10px] sm:text-xs text-gray-300">{formatAmountV3(tx.tokenAmount)}</td>
-                      <td className="px-4 py-3 whitespace-nowrap text-[10px] sm:text-xs text-gray-300">{formatAmountV3(tx.ethAmount)} BONE</td>
+                      <td className="px-4 py-3 whitespace-nowrap text-[10px] sm:text-xs text-gray-300">{formatAmountV3(tx.ethAmount)} {getTokenSymbol()}</td>
                       <td className="px-4 py-3 whitespace-nowrap text-[10px] sm:text-xs text-gray-300">{formatTimestamp(tx.timestamp)}</td>
                     </tr>
                   ))}

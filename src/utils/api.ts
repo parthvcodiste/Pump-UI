@@ -1,9 +1,7 @@
 // api.ts
-
 import axios from 'axios';
 import { Token, TokenWithLiquidityEvents, PaginatedResponse, LiquidityEvent, TokenWithTransactions, PriceResponse, HistoricalPrice, USDHistoricalPrice, TokenHolder, TransactionResponse } from '@/interface/types';
 import { ethers } from 'ethers';
-
 
 export async function getAllTokens(page: number = 1, pageSize: number = 13): Promise<PaginatedResponse<Token>> {
   const response = await axios.get('/api/ports/getAllTokens', {
@@ -276,13 +274,18 @@ export async function getTokensByCreator(
 //blockexplorer Get token Holders
 export async function getTokenHolders(tokenAddress: string): Promise<TokenHolder[]> {
   try {
-    const response = await axios.get(`https://www.shibariumscan.io/api/v2/tokens/${tokenAddress}/holders`);
+    // const response = await axios.get(`https://sepolia.etherscan.io/api/v2/tokens/${tokenAddress}/holders`);
+    const response = await axios.get(`https://deep-index.moralis.io/api/v2.2/erc20/${tokenAddress}/owners?chain=${"sepolia"}&order=DESC`, {
+      headers: {
+        'X-API-Key': process.env.NEXT_PUBLIC_MORALIS_API_KEY,
+      },
+    });
     const data = response.data;
 
-    return data.items.map((item: any) => {
+    return data.result.map((item: any) => {
       return {
-        address: item.address.hash,
-        balance: item.value
+        address: item.owner_address,
+        balance: item.balance,
       };
     });
   } catch (error) {

@@ -7,7 +7,11 @@ import '@rainbow-me/rainbowkit/styles.css'
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { WebSocketProvider } from '@/components/providers/WebSocketProvider';
-import { getTokenSymbol } from '../utils/blockchainUtils'
+import { getTokenSymbol } from '../utils/blockchainUtils';
+import {
+  rainbowWallet,
+  coinbaseWallet,
+} from '@rainbow-me/rainbowkit/wallets';
 
 const mainChain = {
   id: Number(process.env.NEXT_PUBLIC_CHAIN_ID),
@@ -28,6 +32,10 @@ const config = getDefaultConfig({
   appName: "Pump Fun",
   projectId: "YOUR_PROJECT_ID",
   chains: [mainChain],
+  wallets: [{
+    groupName: "Recommended",
+    wallets: [rainbowWallet, coinbaseWallet],
+  }],
   ssr: true,
 });
 

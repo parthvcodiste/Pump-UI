@@ -242,7 +242,7 @@ const ProfilePage: React.FC = () => {
   return (
     <Layout>
       <SEO 
-        title={`${addressToUse ? `Profile: ${formatAddressV2(addressToUse)}` : 'Your Profile'} - Liquid Fun`}
+        title={`${addressToUse ? `Profile: ${formatAddressV2(addressToUse)}` : 'Your Profile'} - HyperLiquid Fun`}
         description={`View token holdings and transactions for ${addressToUse ? formatAddressV2(addressToUse) : 'your account'}.`}
         image="seo/profile.jpg"
       />

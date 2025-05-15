@@ -13,7 +13,7 @@ const FAQPage: React.FC = () => {
     },
     {
       question: "How do I create a token?",
-      answer: `To create a token on Liquid Fun:\n\n1. Go to 'Create Token' page\n2. Fill in token details (name, symbol, etc.)\n3. Upload an image (optional)\n4. Add social links (optional)\n5. Review details\n6. Pay small fee in ${getTokenSymbol()}\n7. Wait for confirmation\n\nYour token will then be live and tradable!`
+      answer: `To create a token on HyperLiquid Fun:\n\n1. Go to 'Create Token' page\n2. Fill in token details (name, symbol, etc.)\n3. Upload an image (optional)\n4. Add social links (optional)\n5. Review details\n6. Pay small fee in ${getTokenSymbol()}\n7. Wait for confirmation\n\nYour token will then be live and tradable!`
     },
     {
       question: "How is the token price determined?",

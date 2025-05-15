@@ -125,7 +125,7 @@ const Navbar: React.FC = () => {
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-8">
               <Link href="/" className="flex items-center text-2xl font-bold">
-                <svg
+                {/* <svg
                   xmlns="http://www.w3.org/2000/svg"
                   width="24"
                   height="24"
@@ -141,8 +141,8 @@ const Navbar: React.FC = () => {
                   <circle cx="19" cy="5" r="2"/>
                   <circle cx="5" cy="19" r="2"/>
                   <path d="M5 17A12 12 0 0 1 17 5"/>
-                </svg>
-                <span className="text-[var(--primary)]">Liquid Fun</span>
+                </svg> */}
+                <span className="text-[var(--primary)]">HyperLiquid Fun</span>
               </Link>
               <div className="hidden md:flex items-center space-x-4">
                 <button 

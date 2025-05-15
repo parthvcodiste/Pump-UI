@@ -205,8 +205,8 @@ const UserDashboard: React.FC = () => {
   return (
     <Layout>
       <SEO 
-        title="Your Token Dashboard - Liquid Fun"
-        description="Manage your tokens and track your transactions in one place. Your personal Liquid Fun dashboard."
+        title="Your Token Dashboard - HyperLiquid Fun"
+        description="Manage your tokens and track your transactions in one place. Your personal HyperLiquid Fun dashboard."
         image="seo/dash.jpg"
       />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">

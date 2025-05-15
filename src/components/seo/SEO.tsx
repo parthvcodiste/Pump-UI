@@ -18,8 +18,8 @@ const SEO: React.FC<SEOProps> = ({ title, description, image, token }) => {
   const domain = process.env.NEXT_PUBLIC_DOMAIN || 'https://pump-ui.onrender.com/';
 
   const seo = {
-    title: token ? `${token.name} (${token.symbol}) - Liquid Fun` : title || 'Liquid Fun - Explore and Trade Tokens',
-    description: token?.description || description || 'Explore, create, and trade tokens on the Liquid Fun platform',
+    title: token ? `${token.name} (${token.symbol}) - HyperLiquid Fun` : title || 'HyperLiquid Fun - Explore and Trade Tokens',
+    description: token?.description || description || 'Explore, create, and trade tokens on the HyperLiquid Fun platform',
     image: token?.logo || image || `${domain}/default-og-image.jpg`,
     url: `${domain}${router.asPath}`,
   };

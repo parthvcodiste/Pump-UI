@@ -21,8 +21,6 @@ const sepoliaConfig: ChainConfig = {
   dexTarget: Number(process.env.NEXT_PUBLIC_DEX_TARGET),
   contractAddresses: [
     process.env.NEXT_PUBLIC_BONDING_CURVE_MANAGER_ADDRESS!,
-    process.env.NEXT_PUBLIC_BONDING_CURVE_MANAGER_ADDRESS_OLD!,
-    process.env.NEXT_PUBLIC_BONDING_CURVE_MANAGER_ADDRESS_OLD1!,
   ].filter(Boolean)
 }
 

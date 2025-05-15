@@ -10,12 +10,12 @@ import { WebSocketProvider } from '@/components/providers/WebSocketProvider';
 import { getTokenSymbol } from '../utils/blockchainUtils'
 
 const mainChain = {
-  id: process.env.NEXT_PUBLIC_CHAIN_ID as any as number,
+  id: Number(process.env.NEXT_PUBLIC_CHAIN_ID),
   name: process.env.NEXT_PUBLIC_CHAIN_NAME,
   nativeCurrency: {
     name: process.env.NEXT_PUBLIC_CHAIN_NAME,
     symbol: getTokenSymbol(),
-    decimals: process.env.NEXT_PUBLIC_DECIMALS as any as number,
+    decimals: Number(process.env.NEXT_PUBLIC_DECIMALS),
   },
   rpcUrls: {
     default: {

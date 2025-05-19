@@ -1,11 +1,16 @@
+import { useIsTelegram } from "@/components/telegram/TelegramProvider";
 import { backButton } from "@telegram-apps/sdk-react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function useBackButton(page?: string, disableBack?: boolean, customHandler?: () => boolean) {
     const router = useRouter();
+    const isTelegram = useIsTelegram();
 
     useEffect(() => {
+        if (!isTelegram) {
+            return;
+        }
         if (backButton.show.isAvailable() && !backButton.isVisible()) {
             backButton.show();
         }
@@ -30,7 +35,7 @@ export default function useBackButton(page?: string, disableBack?: boolean, cust
         return () => {
             offClick();
         };
-    }, [disableBack, page, router, customHandler]);
+    }, [disableBack, page, router, isTelegram, customHandler]);
 
     // Web fallback
     return () => {

@@ -26,7 +26,7 @@ export default function useBackButton(page?: string, disableBack?: boolean, cust
             }
 
             if (page === "back") {
-                router.back() ?? router.push("/");
+                router.back();
             } else {
                 router.push(page ? page : "/");
             }

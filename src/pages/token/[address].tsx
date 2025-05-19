@@ -1,16 +1,16 @@
-import { GetServerSideProps } from 'next';
-import React, { useState, useEffect, useCallback } from 'react';
-import { useRouter } from 'next/router';
-import Image from 'next/image';
-import 'chartjs-adapter-date-fns';
+import { GetServerSideProps } from "next";
+import React, { useState, useEffect, useCallback } from "react";
+import { useRouter } from "next/router";
+import Image from "next/image";
+import "chartjs-adapter-date-fns";
 import {
   ArrowUpDownIcon,
   Globe,
   Twitter,
   Send as Telegram,
-} from 'lucide-react';
-import Layout from '@/components/layout/Layout';
-import TradingViewChart from '@/components/charts/TradingViewChart';
+} from "lucide-react";
+import Layout from "@/components/layout/Layout";
+import TradingViewChart from "@/components/charts/TradingViewChart";
 import {
   useCurrentTokenPrice,
   useTokenLiquidity,
@@ -24,24 +24,29 @@ import {
   formatAmountV2,
   getBondingCurveAddress,
   getTokenSymbol,
-} from '@/utils/blockchainUtils';
-import { getTokenInfoAndTransactions, getTokenUSDPriceHistory, getTokenHolders, getTokenLiquidityEvents } from '@/utils/api';
-import { parseUnits, formatUnits } from 'viem';
-import { useAccount, useWaitForTransactionReceipt } from 'wagmi';
-import { useDebounce } from 'use-debounce';
-import { toast } from 'react-toastify';
-import ShareButton from '@/components/ui/ShareButton';
-import SEO from '@/components/seo/SEO';
-import { TokenWithTransactions } from '@/interface/types';
-import Spinner from '@/components/ui/Spinner';
-import { Tab } from '@headlessui/react';
+} from "@/utils/blockchainUtils";
+import {
+  getTokenInfoAndTransactions,
+  getTokenUSDPriceHistory,
+  getTokenHolders,
+  getTokenLiquidityEvents,
+} from "@/utils/api";
+import { parseUnits, formatUnits } from "viem";
+import { useAccount, useWaitForTransactionReceipt } from "wagmi";
+import { useDebounce } from "use-debounce";
+import { toast } from "react-toastify";
+import ShareButton from "@/components/ui/ShareButton";
+import SEO from "@/components/seo/SEO";
+import { TokenWithTransactions } from "@/interface/types";
+import Spinner from "@/components/ui/Spinner";
+import { Tab } from "@headlessui/react";
 
-import TransactionHistory from '@/components/TokenDetails/TransactionHistory';
-import TokenHolders from '@/components/TokenDetails/TokenHolders';
-import TokenInfo from '@/components/TokenDetails/TokenInfo';
-import Chats from '@/components/TokenDetails/Chats';
+import TransactionHistory from "@/components/TokenDetails/TransactionHistory";
+import TokenHolders from "@/components/TokenDetails/TokenHolders";
+import TokenInfo from "@/components/TokenDetails/TokenInfo";
+import Chats from "@/components/TokenDetails/Chats";
+import useBackButton from "@/hooks/useBackButton";
 // import OGPreview from '@/components/OGPreview'
-
 
 interface TokenDetailProps {
   initialTokenInfo: TokenWithTransactions;
@@ -50,54 +55,80 @@ interface TokenDetailProps {
 }
 
 // const TokenDetail: React.FC = () => {
-  const TokenDetail: React.FC<TokenDetailProps> = ({ initialTokenInfo }) => {
-
+const TokenDetail: React.FC<TokenDetailProps> = ({ initialTokenInfo }) => {
   const router = useRouter();
   const { address } = router.query;
   const { address: userAddress } = useAccount();
 
+  useBackButton("back");
+
   const [isApproved, setIsApproved] = useState(false);
-  const [tokenInfo, setTokenInfo] = useState<TokenWithTransactions>(initialTokenInfo);
+  const [tokenInfo, setTokenInfo] =
+    useState<TokenWithTransactions>(initialTokenInfo);
 
   const [transactions, setTransactions] = useState<any[]>([]);
   const [transactionPage, setTransactionPage] = useState(1);
   const [totalTransactionPages, setTotalTransactionPages] = useState(1);
-  const [fromToken, setFromToken] = useState({ symbol: getTokenSymbol(), amount: '' });
-  const [toToken, setToToken] = useState({ symbol: '', amount: '' });
+  const [fromToken, setFromToken] = useState({
+    symbol: getTokenSymbol(),
+    amount: "",
+  });
+  const [toToken, setToToken] = useState({ symbol: "", amount: "" });
   const [isSwapped, setIsSwapped] = useState(false);
   const [isCalculating, setIsCalculating] = useState(false);
-  const [ethBalance, setEthBalance] = useState('0.000');
-  const [tokenBalance, setTokenBalance] = useState('0.000');
-  const [actionButtonText, setActionButtonText] = useState('Buy');
+  const [ethBalance, setEthBalance] = useState("0.000");
+  const [tokenBalance, setTokenBalance] = useState("0.000");
+  const [actionButtonText, setActionButtonText] = useState("Buy");
   const [chartError, setChartError] = useState<string | null>(null);
   const [chartData, setChartData] = useState<any[]>([]);
   const [isTransacting, setIsTransacting] = useState(false);
-  const [transactionHash, setTransactionHash] = useState<`0x${string}` | undefined>();
-
+  const [transactionHash, setTransactionHash] = useState<
+    `0x${string}` | undefined
+  >();
 
   //holders
-  const [tokenHolders, setTokenHolders] = useState<Awaited<ReturnType<typeof getTokenHolders>>>([]);
+  const [tokenHolders, setTokenHolders] = useState<
+    Awaited<ReturnType<typeof getTokenHolders>>
+  >([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [holdersPerPage] = useState(10);
 
   //confirm
-  const { data: transactionReceipt, isError: transactionError, isLoading: isWaiting } = useWaitForTransactionReceipt({
+  const {
+    data: transactionReceipt,
+    isError: transactionError,
+    isLoading: isWaiting,
+  } = useWaitForTransactionReceipt({
     hash: transactionHash,
     confirmations: 2,
   });
 
   const [debouncedFromAmount] = useDebounce(fromToken.amount, 300);
 
-  const { data: currentPrice, refetch: refetchCurrentPrice } = useCurrentTokenPrice(address as `0x${string}`);
-  const { data: liquidityData, refetch: refetchLiquidity } = useTokenLiquidity(address as `0x${string}`);
+  const { data: currentPrice, refetch: refetchCurrentPrice } =
+    useCurrentTokenPrice(address as `0x${string}`);
+  const { data: liquidityData, refetch: refetchLiquidity } = useTokenLiquidity(
+    address as `0x${string}`
+  );
 
-  const { data: buyReturnData, isLoading: isBuyCalculating } = useCalcBuyReturn(address as `0x${string}`, parseUnits(debouncedFromAmount || '0', 18));
-  const { data: sellReturnData, isLoading: isSellCalculating } = useCalcSellReturn(address as `0x${string}`, parseUnits(debouncedFromAmount || '0', 18));
+  const { data: buyReturnData, isLoading: isBuyCalculating } = useCalcBuyReturn(
+    address as `0x${string}`,
+    parseUnits(debouncedFromAmount || "0", 18)
+  );
+  const { data: sellReturnData, isLoading: isSellCalculating } =
+    useCalcSellReturn(
+      address as `0x${string}`,
+      parseUnits(debouncedFromAmount || "0", 18)
+    );
 
-  const { ethBalance: fetchedEthBalance, tokenBalance: fetchedTokenBalance, refetch: refetchUserBalance } = useUserBalance(userAddress as `0x${string}`, address as `0x${string}`);
+  const {
+    ethBalance: fetchedEthBalance,
+    tokenBalance: fetchedTokenBalance,
+    refetch: refetchUserBalance,
+  } = useUserBalance(userAddress as `0x${string}`, address as `0x${string}`);
   const { data: tokenAllowance } = useTokenAllowance(
-    address as `0x${string}`, 
-    userAddress as `0x${string}`, 
+    address as `0x${string}`,
+    userAddress as `0x${string}`,
     getBondingCurveAddress(address as `0x${string}`)
   );
 
@@ -109,16 +140,19 @@ interface TokenDetailProps {
 
   const [refreshCounter, setRefreshCounter] = useState(0);
 
-
   const fetchTokenData = useCallback(
     async (page: number) => {
       try {
-        const data = await getTokenInfoAndTransactions(address as string, page, 10);
+        const data = await getTokenInfoAndTransactions(
+          address as string,
+          page,
+          10
+        );
         setTokenInfo(data);
         setTransactions(data.transactions.data);
         setTotalTransactionPages(data.transactions.pagination.totalPages);
       } catch (error) {
-        console.error('Error fetching token data:', error);
+        console.error("Error fetching token data:", error);
       }
     },
     [address]
@@ -133,16 +167,22 @@ interface TokenDetailProps {
           return {
             time: new Date(item.timestamp).getTime() / 1000,
             open: parseFloat(prevItem.tokenPriceUSD),
-            high: Math.max(parseFloat(prevItem.tokenPriceUSD), parseFloat(item.tokenPriceUSD)),
-            low: Math.min(parseFloat(prevItem.tokenPriceUSD), parseFloat(item.tokenPriceUSD)),
+            high: Math.max(
+              parseFloat(prevItem.tokenPriceUSD),
+              parseFloat(item.tokenPriceUSD)
+            ),
+            low: Math.min(
+              parseFloat(prevItem.tokenPriceUSD),
+              parseFloat(item.tokenPriceUSD)
+            ),
             close: parseFloat(item.tokenPriceUSD),
           };
         });
         setChartData(formattedData);
       }
     } catch (error) {
-      console.error('Error fetching historical price data:', error);
-      setChartError('Failed to load chart data');
+      console.error("Error fetching historical price data:", error);
+      setChartError("Failed to load chart data");
     }
   }, [address]);
 
@@ -152,15 +192,18 @@ interface TokenDetailProps {
         const holders = await getTokenHolders(address as string);
         setTokenHolders(holders);
       } catch (error) {
-        console.error('Error fetching token holders:', error);
-        toast.error('Failed to fetch token holders');
+        console.error("Error fetching token holders:", error);
+        toast.error("Failed to fetch token holders");
       }
     }
   };
 
   const indexOfLastHolder = currentPage * holdersPerPage;
   const indexOfFirstHolder = indexOfLastHolder - holdersPerPage;
-  const currentHolders = tokenHolders.slice(indexOfFirstHolder, indexOfLastHolder);
+  const currentHolders = tokenHolders.slice(
+    indexOfFirstHolder,
+    indexOfLastHolder
+  );
 
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
@@ -173,15 +216,23 @@ interface TokenDetailProps {
       fetchTokenHolders();
       refetchUserBalance();
 
-      
       try {
         const events = await getTokenLiquidityEvents(tokenInfo.id);
         setLiquidityEvents(events);
       } catch (error) {
-        console.error('Error fetching liquidity events:', error);
+        console.error("Error fetching liquidity events:", error);
       }
     }
-  }, [address, transactionPage, fetchTokenData, fetchHistoricalPriceData, refetchCurrentPrice, refetchLiquidity, tokenInfo.id, refetchUserBalance]);
+  }, [
+    address,
+    transactionPage,
+    fetchTokenData,
+    fetchHistoricalPriceData,
+    refetchCurrentPrice,
+    refetchLiquidity,
+    tokenInfo.id,
+    refetchUserBalance,
+  ]);
 
   useEffect(() => {
     fetchAllData();
@@ -198,7 +249,9 @@ interface TokenDetailProps {
       setEthBalance(parseFloat(formatUnits(fetchedEthBalance, 18)).toFixed(5));
     }
     if (fetchedTokenBalance) {
-      setTokenBalance(parseFloat(formatUnits(fetchedTokenBalance, 18)).toFixed(5));
+      setTokenBalance(
+        parseFloat(formatUnits(fetchedTokenBalance, 18)).toFixed(5)
+      );
     }
   }, [fetchedEthBalance, fetchedTokenBalance]);
 
@@ -207,21 +260,27 @@ interface TokenDetailProps {
       if (isSwapped) {
         if (!isApproved) {
           setIsApproved(true);
-          toast.success('Token approval successful');
+          toast.success("Token approval successful");
         } else {
-          toast.success('Tokens sold successfully');
+          toast.success("Tokens sold successfully");
         }
       } else {
-        toast.success('Tokens bought successfully');
+        toast.success("Tokens bought successfully");
       }
       fetchAllData();
       setIsTransacting(false);
-      setRefreshCounter(prev => prev + 1);
+      setRefreshCounter((prev) => prev + 1);
     } else if (transactionError) {
-      toast.error('Transaction failed');
+      toast.error("Transaction failed");
       setIsTransacting(false);
     }
-  }, [transactionReceipt, transactionError, isSwapped, isApproved, fetchAllData]);
+  }, [
+    transactionReceipt,
+    transactionError,
+    isSwapped,
+    isApproved,
+    fetchAllData,
+  ]);
 
   useEffect(() => {
     if (debouncedFromAmount) {
@@ -242,35 +301,47 @@ interface TokenDetailProps {
         }
       }
     } else {
-      setToToken((prev) => ({ ...prev, amount: '' }));
+      setToToken((prev) => ({ ...prev, amount: "" }));
       setIsCalculating(false);
     }
-  }, [debouncedFromAmount, buyReturnData, sellReturnData, isSwapped, isBuyCalculating, isSellCalculating]);
+  }, [
+    debouncedFromAmount,
+    buyReturnData,
+    sellReturnData,
+    isSwapped,
+    isBuyCalculating,
+    isSellCalculating,
+  ]);
 
   useEffect(() => {
-    setActionButtonText(isSwapped ? (isApproved ? 'Sell' : 'Approve') : 'Buy');
+    setActionButtonText(isSwapped ? (isApproved ? "Sell" : "Approve") : "Buy");
   }, [isSwapped, isApproved]);
 
   const handleSwap = useCallback(() => {
     setIsSwapped((prev) => !prev);
     setFromToken((prev) => ({
-      symbol: prev.symbol === getTokenSymbol() ? tokenInfo.symbol : getTokenSymbol(),
-      amount: '',
+      symbol:
+        prev.symbol === getTokenSymbol() ? tokenInfo.symbol : getTokenSymbol(),
+      amount: "",
     }));
     setToToken((prev) => ({
-      symbol: prev.symbol === getTokenSymbol() ? tokenInfo.symbol : getTokenSymbol(),
-      amount: '',
+      symbol:
+        prev.symbol === getTokenSymbol() ? tokenInfo.symbol : getTokenSymbol(),
+      amount: "",
     }));
   }, [tokenInfo]);
 
-  const handleFromAmountChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
-    setFromToken((prev) => ({ ...prev, amount: e.target.value }));
-    setIsCalculating(true);
-  }, []);
+  const handleFromAmountChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      setFromToken((prev) => ({ ...prev, amount: e.target.value }));
+      setIsCalculating(true);
+    },
+    []
+  );
 
   const handleAction = useCallback(async () => {
     if (!address || !fromToken.amount || !userAddress) {
-      toast.error('Missing required information');
+      toast.error("Missing required information");
       return;
     }
 
@@ -288,14 +359,25 @@ interface TokenDetailProps {
       } else {
         txHash = await buyTokens(address as `0x${string}`, amount);
       }
-      console.log('Transaction hash:', txHash);
+      console.log("Transaction hash:", txHash);
       setTransactionHash(txHash);
     } catch (error) {
-      console.error('Transaction error:', error);
-      toast.error('Transaction failed to initiate: ' + (error as Error).message);
+      console.error("Transaction error:", error);
+      toast.error(
+        "Transaction failed to initiate: " + (error as Error).message
+      );
       setIsTransacting(false);
     }
-  }, [address, fromToken.amount, userAddress, isSwapped, isApproved, approveTokens, sellTokens, buyTokens]);
+  }, [
+    address,
+    fromToken.amount,
+    userAddress,
+    isSwapped,
+    isApproved,
+    approveTokens,
+    sellTokens,
+    buyTokens,
+  ]);
 
   useEffect(() => {
     if (!isWaiting && !transactionError) {
@@ -310,7 +392,7 @@ interface TokenDetailProps {
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text);
-    toast.success('Copied');
+    toast.success("Copied");
   };
 
   const handleMaxClick = () => {
@@ -318,14 +400,14 @@ interface TokenDetailProps {
       // For token balance, use the exact balance without formatting
       if (fetchedTokenBalance) {
         const exactTokenBalance = formatUnits(fetchedTokenBalance, 18);
-        setFromToken(prev => ({ ...prev, amount: exactTokenBalance }));
+        setFromToken((prev) => ({ ...prev, amount: exactTokenBalance }));
       }
     } else {
       // For ETH balance, use 95% of the balance to reserve for gas
       if (fetchedEthBalance) {
         const exactEthBalance = formatUnits(fetchedEthBalance, 18);
         const maxEthAmount = (parseFloat(exactEthBalance) * 0.95).toString();
-        setFromToken(prev => ({ ...prev, amount: maxEthAmount }));
+        setFromToken((prev) => ({ ...prev, amount: maxEthAmount }));
       }
     }
   };
@@ -343,12 +425,12 @@ interface TokenDetailProps {
   return (
     <Layout>
       <SEO token={tokenInfo} />
-      
+
       {/* Mobile-first header (shown only on mobile) */}
       <div className="lg:hidden mb-6">
-        <TokenInfo 
-          tokenInfo={tokenInfo} 
-          showHeader={true} 
+        <TokenInfo
+          tokenInfo={tokenInfo}
+          showHeader={true}
           refreshTrigger={refreshCounter}
           liquidityEvents={liquidityEvents}
         />
@@ -360,11 +442,13 @@ interface TokenDetailProps {
           <div className="lg:col-span-2 space-y-6">
             {/* Price Chart Section */}
             <div className="bg-[var(--card)] rounded-lg p-4">
-              <h2 className="text-sm font-semibold mb-4 text-gray-400">Price Chart (USD)</h2>
+              <h2 className="text-sm font-semibold mb-4 text-gray-400">
+                Price Chart (USD)
+              </h2>
               <div className="bg-[var(--card2)] rounded-lg p-2">
-                <TradingViewChart 
-                  data={chartData} 
-                  liquidityEvents={liquidityEvents} 
+                <TradingViewChart
+                  data={chartData}
+                  liquidityEvents={liquidityEvents}
                   tokenInfo={tokenInfo}
                 />
               </div>
@@ -372,7 +456,9 @@ interface TokenDetailProps {
 
             {/* Quick Actions Section - Mobile Only */}
             <div className="lg:hidden bg-[var(--card)] rounded-lg p-4">
-              <h2 className="text-sm font-semibold mb-4 text-gray-400">Quick Actions</h2>
+              <h2 className="text-sm font-semibold mb-4 text-gray-400">
+                Quick Actions
+              </h2>
               <div className="bg-[var(--card2)] rounded-lg p-4">
                 {/* From Input */}
                 <div className="mb-4">
@@ -397,12 +483,14 @@ interface TokenDetailProps {
                     >
                       MAX
                     </button>
-                    <span className="text-gray-400 ml-2">{fromToken.symbol}</span>
+                    <span className="text-gray-400 ml-2">
+                      {fromToken.symbol}
+                    </span>
                   </div>
                 </div>
 
                 {/* Swap Button */}
-                <button 
+                <button
                   onClick={handleSwap}
                   className="w-full flex justify-center p-2 text-gray-400 hover:text-[var(--primary)]"
                 >
@@ -420,7 +508,7 @@ interface TokenDetailProps {
                   <div className="flex items-center bg-[var(--card)] rounded-lg p-3">
                     <input
                       type="text"
-                      value={isCalculating ? 'Calculating...' : toToken.amount}
+                      value={isCalculating ? "Calculating..." : toToken.amount}
                       readOnly
                       className="w-full bg-transparent text-white outline-none text-sm"
                       placeholder="0.00"
@@ -436,7 +524,7 @@ interface TokenDetailProps {
                   className="w-full py-3 bg-[var(--primary)] text-black rounded-lg font-medium hover:bg-[var(--primary-hover)] 
                     transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isTransacting ? 'Processing...' : actionButtonText}
+                  {isTransacting ? "Processing..." : actionButtonText}
                 </button>
               </div>
             </div>
@@ -450,8 +538,8 @@ interface TokenDetailProps {
                       `w-full rounded-md py-2.5 text-sm font-medium leading-5 transition-colors
                       ${
                         selected
-                          ? 'bg-[var(--card-boarder)] text-white'
-                          : 'text-gray-400 hover:bg-[var(--card-hover)] hover:text-white'
+                          ? "bg-[var(--card-boarder)] text-white"
+                          : "text-gray-400 hover:bg-[var(--card-hover)] hover:text-white"
                       }`
                     }
                   >
@@ -462,8 +550,8 @@ interface TokenDetailProps {
                       `w-full rounded-md py-2.5 text-sm font-medium leading-5 transition-colors
                       ${
                         selected
-                          ? 'bg-[var(--card-boarder)] text-white'
-                          : 'text-gray-400 hover:bg-[var(--card-hover)] hover:text-white'
+                          ? "bg-[var(--card-boarder)] text-white"
+                          : "text-gray-400 hover:bg-[var(--card-hover)] hover:text-white"
                       }`
                     }
                   >
@@ -481,7 +569,10 @@ interface TokenDetailProps {
                     />
                   </Tab.Panel>
                   <Tab.Panel>
-                    <Chats tokenAddress={address as string} tokenInfo={tokenInfo} />
+                    <Chats
+                      tokenAddress={address as string}
+                      tokenInfo={tokenInfo}
+                    />
                   </Tab.Panel>
                 </Tab.Panels>
               </Tab.Group>
@@ -492,9 +583,9 @@ interface TokenDetailProps {
           <div className="space-y-6">
             {/* Token Info Header (shown only on desktop) */}
             <div className="hidden lg:block bg-[var(--card)] rounded-lg p-4">
-              <TokenInfo 
-                tokenInfo={tokenInfo} 
-                showHeader={true} 
+              <TokenInfo
+                tokenInfo={tokenInfo}
+                showHeader={true}
                 refreshTrigger={refreshCounter}
                 liquidityEvents={liquidityEvents}
               />
@@ -502,14 +593,17 @@ interface TokenDetailProps {
 
             {/* Quick Actions (Swap) Section - Desktop Only */}
             <div className="hidden lg:block bg-[var(--card)] rounded-lg p-4">
-              <h2 className="text-sm font-semibold mb-4 text-gray-400">Quick Actions</h2>
+              <h2 className="text-sm font-semibold mb-4 text-gray-400">
+                Quick Actions
+              </h2>
               <div className="bg-[var(--card2)] rounded-lg p-4">
                 {/* From Input */}
                 <div className="mb-4">
                   <div className="flex justify-between text-sm mb-2">
                     <span className="text-gray-400">From</span>
                     <span className="text-gray-400">
-                      Balance: {isSwapped ? tokenBalance : ethBalance} {fromToken.symbol}
+                      Balance: {isSwapped ? tokenBalance : ethBalance}{" "}
+                      {fromToken.symbol}
                     </span>
                   </div>
                   <div className="flex items-center bg-[var(--card)] rounded-lg p-3">
@@ -527,12 +621,14 @@ interface TokenDetailProps {
                     >
                       MAX
                     </button>
-                    <span className="text-gray-400 ml-2">{fromToken.symbol}</span>
+                    <span className="text-gray-400 ml-2">
+                      {fromToken.symbol}
+                    </span>
                   </div>
                 </div>
 
                 {/* Swap Button */}
-                <button 
+                <button
                   onClick={handleSwap}
                   className="w-full flex justify-center p-2 text-gray-400 hover:text-[var(--primary)]"
                 >
@@ -544,13 +640,14 @@ interface TokenDetailProps {
                   <div className="flex justify-between text-sm mb-2">
                     <span className="text-gray-400">To (Estimated)</span>
                     <span className="text-gray-400">
-                      Balance: {isSwapped ? ethBalance : tokenBalance} {toToken.symbol}
+                      Balance: {isSwapped ? ethBalance : tokenBalance}{" "}
+                      {toToken.symbol}
                     </span>
                   </div>
                   <div className="flex items-center bg-[var(--card)] rounded-lg p-3">
                     <input
                       type="text"
-                      value={isCalculating ? 'Calculating...' : toToken.amount}
+                      value={isCalculating ? "Calculating..." : toToken.amount}
                       readOnly
                       className="w-full bg-transparent text-white outline-none text-sm"
                       placeholder="0.00"
@@ -566,7 +663,7 @@ interface TokenDetailProps {
                   className="w-full py-3 bg-[var(--primary)] text-black rounded-lg font-medium hover:bg-[var(--primary-hover)] 
                     transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {isTransacting ? 'Processing...' : actionButtonText}
+                  {isTransacting ? "Processing..." : actionButtonText}
                 </button>
               </div>
             </div>
@@ -575,7 +672,9 @@ interface TokenDetailProps {
 
         {/* Token Holders Section (Full Width) */}
         <div className="mt-6 bg-[var(--card)] rounded-lg p-4">
-          <h2 className="text-sm font-semibold mb-4 text-gray-400">Token Holders</h2>
+          <h2 className="text-sm font-semibold mb-4 text-gray-400">
+            Token Holders
+          </h2>
           <TokenHolders
             tokenHolders={currentHolders}
             currentPage={currentPage}
@@ -587,14 +686,14 @@ interface TokenDetailProps {
             allHolders={tokenHolders}
           />
         </div>
-         {/* Share Button */}
-         <ShareButton tokenInfo={tokenInfo} />
+        {/* Share Button */}
+        <ShareButton tokenInfo={tokenInfo} />
       </div>
     </Layout>
   );
 };
 
-//simple server-side rendering  just to get token info for seo - nothing more - nothing else  
+//simple server-side rendering  just to get token info for seo - nothing more - nothing else
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { address } = context.params as { address: string };
 
@@ -607,7 +706,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
       },
     };
   } catch (error) {
-    console.error('Error fetching token data:', error);
+    console.error("Error fetching token data:", error);
     return {
       notFound: true,
     };

@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3004",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -17,6 +17,7 @@
     "@radix-ui/react-switch": "^1.1.0",
     "@rainbow-me/rainbowkit": "^2.1.3",
     "@tanstack/react-query": "^5.50.1",
+    "@telegram-apps/sdk-react": "^3.2.4",
     "@uploadthing/react": "^7.3.0",
     "axios": "^1.7.2",
     "chart.js": "^4.4.3",

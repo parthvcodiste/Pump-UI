@@ -58,11 +58,11 @@ export default function App({ Component, pageProps }: AppProps) {
   const isTelegram = useIsTelegram();
 
   const wallets = [walletConnectWallet];
-  if (!isTelegram) {
+  // if (!isTelegram) {
     wallets.push(metaMaskWallet);
     wallets.push(trustWallet);
     wallets.push(rainbowWallet);
-  }
+  // }
 
   const storage =
     typeof window !== "undefined"

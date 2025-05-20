@@ -16,6 +16,7 @@ import { parseUnits } from "viem";
 import PurchaseConfirmationPopup from "@/components/notifications/PurchaseConfirmationPopup";
 import Modal from "@/components/notifications/Modal";
 import useBackButton from "@/hooks/useBackButton";
+import Spinner from "../components/ui/Spinner";
 
 const MAX_FILE_SIZE = 1024 * 1024; // 1MB image size limit
 
@@ -519,7 +520,8 @@ const CreateToken: React.FC = () => {
             onClose={() => {}} // Empty function to prevent closing
           >
             <div className="p-6">
-              <h3 className="text-lg font-medium text-gray-100 mb-4">
+              <Spinner />
+              <h3 className="text-lg font-medium text-gray-100 mb-4 mt-3">
                 Please Wait
               </h3>
               <p className="text-sm text-gray-500">

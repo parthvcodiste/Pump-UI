@@ -236,6 +236,7 @@ export function useCreateToken() {
         functionName: 'create',
         args: [name, symbol],
         value: totalValue,
+        type: 'legacy',
         // gas: gasLimit
       });
       console.log('Token creation transaction sent. Hash:', hash);
@@ -321,6 +322,7 @@ export function useBuyTokens(tokenAddress?: string) {
         functionName: 'buy',
         args: [tokenAddress],
         value: ethAmount,
+        type: 'legacy',
       });
       return result;
     } catch (error) {
@@ -342,6 +344,7 @@ export function useSellTokens(tokenAddress?: string) {
         abi: BondingCurveManagerABI,
         functionName: 'sell',
         args: [tokenAddress, amount],
+        type: 'legacy',
       });
       return result;
     } catch (error) {
@@ -364,6 +367,7 @@ export function useApproveTokens() {
         abi: ERC20ABI,
         functionName: 'approve',
         args: [bondingCurveAddress, maxUint256],  // Approve the bonding curve contract
+        type: 'legacy',
       });
       return result;
     } catch (error) {

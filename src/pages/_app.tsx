@@ -23,7 +23,7 @@ import {
 import dynamic from "next/dynamic";
 import { useIsTelegram } from "../components/telegram/TelegramProvider";
 import { useEffect, useState } from "react";
-import { init } from "@/utils/init";
+import { init } from "@/utils/init"
 const TelegramProvider = dynamic(
   () => import("@/components/telegram/TelegramProvider"),
   {
@@ -39,6 +39,7 @@ const mainChain = {
     symbol: getTokenSymbol(),
     decimals: Number(process.env.NEXT_PUBLIC_DECIMALS),
   },
+  iconUrl: process.env.NEXT_PUBLIC_ICON_URL,
   rpcUrls: {
     default: {
       http: [process.env.NEXT_PUBLIC_RPC_URL],
@@ -73,7 +74,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   const config = getDefaultConfig({
     appName: "HyperLiquid Fun",
-    projectId: "PROJECT_ID",
+    projectId: "4ac68c970d9609abb26a471fb3472c63",
     chains: [mainChain],
     syncConnectedChain: true,
     wallets: [

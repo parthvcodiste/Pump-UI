@@ -1,4 +1,4 @@
-"use client";
+// "use client";
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 import { createStorage, WagmiProvider } from "wagmi";
@@ -22,7 +22,7 @@ import {
 } from "@rainbow-me/rainbowkit/wallets";
 import dynamic from "next/dynamic";
 import { useIsTelegram } from "../components/telegram/TelegramProvider";
-import { useEffect, useState } from "react";
+// import { useEffect, useState } from "react";
 const TelegramProvider = dynamic(
   () => import("@/components/telegram/TelegramProvider"),
   {
@@ -49,39 +49,20 @@ const mainChain = {
 const queryClient = new QueryClient();
 
 export default function App({ Component, pageProps }: AppProps) {
-  const [mounted, setMounted] = useState(false);
+  // const [mounted, setMounted] = useState(false);
 
-  useEffect(() => {
-    setMounted(true);
-  }, []);
+  // useEffect(() => {
+  //   setMounted(true);
+  // }, []);
 
   const isTelegram = useIsTelegram();
 
-  console.log("isTelegram - ", isTelegram);
-  useEffect(() => {
-  if (isTelegram) {
-    // Force desktop mode by overriding mobile detection
-    // This affects how WalletConnect's internal isAndroid/isIOS/isMobile functions behave
-    console.log("Before - ", window.navigator.userAgent);
-    const originalUserAgent = window.navigator.userAgent;
-    Object.defineProperty(navigator, 'userAgent', {
-      get: function() {
-        // Remove mobile indicators from user agent
-        return originalUserAgent
-          .replace(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i, "Desktop");
-      },
-      configurable: true,
-    });
-    console.log("After - ", window.navigator.userAgent);
-  }
-}, [isTelegram]);
-
   const wallets = [walletConnectWallet];
-  // if (!isTelegram) {
+  if (!isTelegram) {
     wallets.push(metaMaskWallet);
     wallets.push(trustWallet);
     wallets.push(rainbowWallet);
-  // }
+  }
 
   const storage =
     typeof window !== "undefined"
@@ -102,7 +83,7 @@ export default function App({ Component, pageProps }: AppProps) {
     storage,
   });
 
-  if (!mounted) return null;
+  // if (!mounted) return null;
 
   return (
     <WagmiProvider config={config} reconnectOnMount={true}>

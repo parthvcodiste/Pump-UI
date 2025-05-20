@@ -57,6 +57,25 @@ export default function App({ Component, pageProps }: AppProps) {
 
   const isTelegram = useIsTelegram();
 
+  console.log("isTelegram - ", isTelegram);
+  useEffect(() => {
+  if (isTelegram) {
+    // Force desktop mode by overriding mobile detection
+    // This affects how WalletConnect's internal isAndroid/isIOS/isMobile functions behave
+    console.log("Before - ", window.navigator.userAgent);
+    const originalUserAgent = window.navigator.userAgent;
+    Object.defineProperty(navigator, 'userAgent', {
+      get: function() {
+        // Remove mobile indicators from user agent
+        return originalUserAgent
+          .replace(/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i, "Desktop");
+      },
+      configurable: true,
+    });
+    console.log("After - ", window.navigator.userAgent);
+  }
+}, [isTelegram]);
+
   const wallets = [walletConnectWallet];
   // if (!isTelegram) {
     wallets.push(metaMaskWallet);

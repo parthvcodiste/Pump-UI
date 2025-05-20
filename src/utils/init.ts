@@ -16,4 +16,5 @@ export function init(): void {
     miniApp.mountSync();
     initData.restore();
 
+    if (true) import("eruda").then((lib) => lib.default.init()).catch(console.error);
 }

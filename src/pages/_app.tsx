@@ -23,7 +23,6 @@ import {
 import dynamic from "next/dynamic";
 import { useIsTelegram } from "../components/telegram/TelegramProvider";
 import { useEffect, useState } from "react";
-import { init } from "@/utils/init"
 const TelegramProvider = dynamic(
   () => import("@/components/telegram/TelegramProvider"),
   {
@@ -63,8 +62,6 @@ export default function App({ Component, pageProps }: AppProps) {
     wallets.push(metaMaskWallet);
     wallets.push(trustWallet);
     wallets.push(rainbowWallet);
-  } else {
-    // init();
   }
 
   const storage =
@@ -89,7 +86,7 @@ export default function App({ Component, pageProps }: AppProps) {
   if (!mounted) return null;
 
   return (
-    <WagmiProvider config={config}>
+    <WagmiProvider config={config} reconnectOnMount={true}>
       <QueryClientProvider client={queryClient}>
         <RainbowKitProvider theme={darkTheme()}>
           <WebSocketProvider>

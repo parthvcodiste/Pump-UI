@@ -74,7 +74,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   const config = getDefaultConfig({
     appName: "HyperLiquid Fun",
-    projectId: "4ac68c970d9609abb26a471fb3472c63",
+    projectId: "PROJECT_ID",
     chains: [mainChain],
     syncConnectedChain: true,
     wallets: [

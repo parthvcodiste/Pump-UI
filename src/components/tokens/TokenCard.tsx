@@ -120,7 +120,7 @@ const TokenCard: React.FC<TokenCardProps> = ({ token, isEnded, onTokenClick, onL
 
   if (isEnded && 'liquidityEvents' in token && token.liquidityEvents.length > 0) {
     const liquidityEvent = token.liquidityEvents[0];
-    const uniswapLink = `https://chewyswap.dog/swap/?outputCurrency=${token.address}&chain=sepolia`;
+    const uniswapLink = `https://testnet.hyperswap.exchange/#/swap?use=V2`;
 
     return (
       <div onClick={handleClick} className="cursor-pointer">
